@@ -8,8 +8,7 @@ pipeline {
                     export KUBECONFIG=/var/lib/jenkins/.kube/config
                     kubectl patch service sentiment-api-service \
                         -p '{"spec":{"selector":{"app":"sentiment-api","slot":"green"}}}'
-                    ssh -o StrictHostKeyChecking=no ubuntu@localhost \
-                        "sudo systemctl restart kubectl-portforward"
+                    sudo systemctl restart kubectl-portforward
                 """
             }
         }
