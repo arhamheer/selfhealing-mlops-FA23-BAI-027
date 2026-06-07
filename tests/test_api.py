@@ -1,7 +1,8 @@
 import pytest
 import requests
+import os
 
-BASE_URL = "http://100.50.10.159:32500"
+BASE_URL = os.environ.get("BASE_URL", "http://localhost:5000")
 
 
 def test_health_endpoint():
