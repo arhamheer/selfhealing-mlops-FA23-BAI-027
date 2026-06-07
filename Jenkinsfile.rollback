@@ -6,22 +6,12 @@ pipeline {
             steps {
                 sh """
                     export KUBECONFIG=/var/lib/jenkins/.kube/config
-
-                    echo "Switching service traffic to GREEN (stable) slot..."
-
                     kubectl patch service sentiment-api-service \
                         -p '{"spec":{"selector":{"app":"sentiment-api","slot":"green"}}}'
-
-                    echo "Traffic switched to stable (green) deployment."
-                    kubectl get service sentiment-api-service -o yaml | grep -A5 selector
+                    ssh -o StrictHostKeyChecking=no ubuntu@localhost \
+                        "sudo systemctl restart kubectl-portforward"
                 """
             }
-        }
-    }
-
-    post {
-        success {
-            echo "Rollback to stable complete. model_version should now be stable-v0-0DD8"
         }
     }
 }
