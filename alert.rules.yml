@@ -1,0 +1,11 @@
+groups:
+  - name: ml_drift_alerts
+    rules:
+      - alert: ModelConfidenceDrift
+        expr: prediction_confidence_score < 0.6
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "ML Model Confidence Drift Detected"
+          description: "Prediction confidence has dropped below 0.6 for more than 1 minute. Triggering rollback."
