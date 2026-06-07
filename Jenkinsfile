@@ -56,17 +56,18 @@ pipeline {
         }
 
         stage('UI Test') {
-            steps {
-                sh """
-                    docker run --rm \
-                        --network host \
-                        -v \$(pwd)/tests:/tests \
-                        --shm-size=2g \
-                        selenium/standalone-chrome:latest \
-                        bash -c "pip install selenium pytest requests -q && pytest /tests/test_ui.py -v --tb=short" || true
-                """
-            }
-        }
+    steps {
+        sh """
+            docker run --rm \
+                --network host \
+                -v \$(pwd)/tests:/tests \
+                -e APP_URL=http://100.50.10.159:32500 \
+                --shm-size=2g \
+                selenium/standalone-chrome:latest \
+                bash -c "pip install selenium pytest requests -q && pytest /tests/test_ui.py -v --tb=short" || true
+        """
+    }
+}
 
         stage('Build and Push') {
             steps {
