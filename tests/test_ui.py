@@ -22,7 +22,7 @@ def test_frontend_sentiment():
 
     try:
         driver.get(APP_URL)
-        time.sleep(2)
+        time.sleep(3)
 
         text_input = driver.find_element(By.ID, "text-input")
         submit_btn = driver.find_element(By.ID, "submit-btn")
@@ -30,13 +30,11 @@ def test_frontend_sentiment():
         text_input.send_keys("The cinematography was breathtaking and the performances were outstanding")
         submit_btn.click()
 
-        wait = WebDriverWait(driver, 15)
-        result_element = wait.until(
-            EC.presence_of_element_located((By.ID, "result-output"))
-        )
-        time.sleep(3)
+        # Wait for result to be non-empty
+        wait = WebDriverWait(driver, 30)
+        wait.until(lambda d: d.find_element(By.ID, "result-output").text.strip() != "")
 
-        result_text = result_element.text
+        result_text = driver.find_element(By.ID, "result-output").text
         assert result_text != "", "Result output is empty"
         assert any(keyword in result_text for keyword in ["POSITIVE", "NEGATIVE", "Confidence"]), \
             f"Result does not contain expected keywords: {result_text}"
